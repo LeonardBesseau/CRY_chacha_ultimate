@@ -1,0 +1,5 @@
+One of your colleague designed his custom ChaCha20 improvement. 
+He told you that he made it much more efficient by replacing all the additions modulo 2**32 by a simple XOR. 
+He is conviced that his implementation is secure. 
+
+Prove him wrong. You are given a ciphertext and part of the corresponding plaintext. 
