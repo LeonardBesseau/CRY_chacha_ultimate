@@ -42,14 +42,14 @@ def test(a, b, c, d):
 
 # Double round on a Chacha20 state seen as a 16 32-bit integer array
 def double_round(state):
-    state[0], state[4], state[8], state[12] = q(state[0], state[4], state[8], state[12])
-    state[1], state[5], state[9], state[13] = q(state[1], state[5], state[9], state[13])
-    state[2], state[6], state[10], state[14] = q(state[2], state[6], state[10], state[14])
-    state[3], state[7], state[11], state[15] = q(state[3], state[7], state[11], state[15])
-    state[0], state[5], state[10], state[15] = q(state[0], state[5], state[10], state[15])
-    state[1], state[6], state[11], state[12] = q(state[1], state[6], state[11], state[12])
-    state[2], state[7], state[8], state[13] = q(state[2], state[7], state[8], state[13])
-    state[3], state[4], state[9], state[14] = q(state[3], state[4], state[9], state[14])
+    state[0], state[4], state[8], state[12] = quarter_round(state[0], state[4], state[8], state[12])
+    state[1], state[5], state[9], state[13] = quarter_round(state[1], state[5], state[9], state[13])
+    state[2], state[6], state[10], state[14] = quarter_round(state[2], state[6], state[10], state[14])
+    state[3], state[7], state[11], state[15] = quarter_round(state[3], state[7], state[11], state[15])
+    state[0], state[5], state[10], state[15] = quarter_round(state[0], state[5], state[10], state[15])
+    state[1], state[6], state[11], state[12] = quarter_round(state[1], state[6], state[11], state[12])
+    state[2], state[7], state[8], state[13] = quarter_round(state[2], state[7], state[8], state[13])
+    state[3], state[4], state[9], state[14] = quarter_round(state[3], state[4], state[9], state[14])
 
 
 def chacha(state):
