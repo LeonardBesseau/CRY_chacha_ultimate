@@ -156,44 +156,49 @@ def q(a, b, c, d):
     return a1, b1, c1, d1
 
 
+def invert_finalXor(pt_array, state):
+    stream = state
+    ciphertext = pt_array
+    output = []
+    for i in range(64):
+        output.append(stream[i] ^ ciphertext[i])
+    return streamToState(output)
+
+
 if __name__ == '__main__':
-    plaintext = 'You will have trouble finding the flag. The original ChaCha20 is'
+    plaintext = 'You will have trouble finding the flag. My version of ChaCha20 i'
+    c = "/5FiR7ntSYLygEr/eVYlwCA23WQ56m/kznMXN5HspHeNrwtqr4iMjZgPkVCSHkYGoh5SeYkUaPTuH2XVcnHewcJ2UgFI7EZFVsHizsg9XNHGE6K6b326iEGkRj2ICfDzE6rTiddbZ955YjBR4imUur1/n9Nw"
 
-    keyFound = [0x171c2bf6,
-                0xe1bcd487,
+    keyFound = [0x171c2bf4,
+                0xe1bce487,
                 0x768c572a,
                 0x557a19ca,
                 0x23cb52a8,
-                0xc55a99d9,
+                0xca5a99d9,
                 0xfeae25c,
                 0xa3b1830c]
 
     nonce = [0x90eaf83a, 0xca97123e]
-    av = initialState(keyFound, [0, 0], nonce)
-    i1, i2, i3, i4 = av[0], av[4], av[8], av[12]
-    print(i1)
-    print(i2)
-    print(i3)
-    print(i4)
-    i1, i2, i3, i4 = quarter_round(av[0], av[4], av[8], av[12])
-    keyFound = [0x171c2bf6,
-                0xe1bcd487,
-                0x768c572a,
-                0x557a19ca,
-                0x23cb52a8,
-                0xc55a99d9,
-                0xfeae25c,
-                0xa3b1830c]
+    # av = initialState(keyFound, [0, 0], nonce)
 
-    nonce = [0x90eaf83a, 0xca97123e]
-    av = initialState(keyFound, [0, 0], nonce)
-    i5, i6, i7, i8 = q(av[0], av[4], av[8], av[12])
-    print(i1)
-    print(i2)
-    print(i3)
-    print(i4)
-    print(i1 == i5 and i2 == i6 and i3 == i7 and i4 == i8)
-    init_state = initialState(keyFound, [0, 0], nonce)
+    # print(av)
+    # av[0], av[4], av[8], av[12] = q(av[0], av[4], av[8], av[12])
+    # print(av)
+    # av[1], av[5], av[9], av[13] = q(av[1], av[5], av[9], av[13])
+    # print(av)
+    # av[2], av[6], av[10], av[14] = q(av[2], av[6], av[10], av[14])
+    # print(av)
+    # av[3], av[7], av[11], av[15] = q(av[3], av[7], av[11], av[15] )
+    # print(av)
+    # av[0], av[5], av[10], av[15] = q(av[0], av[5], av[10], av[15])
+    # print(av)
+    # av[1], av[6], av[11], av[12] = q(av[1], av[6], av[11], av[12])
+    # print(av)
+    # av[2], av[7], av[8], av[13] = q(av[2], av[7], av[8], av[13])
+    # print(av)
+    # av[3], av[4], av[9], av[14] = q(av[3], av[4], av[9], av[14])
+    # print(av)
+    # init_state = initialState(keyFound, [0, 0], nonce)
     # print(init_state)
     # for i in init_state:
     #     print(hex(i))
@@ -211,30 +216,42 @@ if __name__ == '__main__':
     #     init_state[i] = init[i] ^ init_state[i]
     # print(init_state)
     c1 = chacha_encrypt(plaintext, keyFound, [0, 0], nonce)
+    arr = []
+    t = bytearray(plaintext, "utf8")
+    for i in range(64):
+        arr.append(t[i] ^ c1[i])
+    print("test_stream ", end=' ')
+    print(streamToState(arr))
     print(base64.b64encode(c1))
     print(chacha_decrypt(c1, keyFound, [0, 0], nonce))
-    # guessed_final_state = []
-    # tt = bytearray(plaintext, "utf8")
-    # for i in range(64):
-    #     guessed_final_state.append(tt[i] ^ c1[i])
-    # print(guessed_final_state)
-    # print(len(guessed_final_state))
-    #
-    # known_starting_state = [0x61707865, 0x3320646e,
-    #                         0x79622d32, 0x6b206574] + \
-    #                        [0, 0, 0, 0,
-    #                         0, 0, 0, 0] + [0, 0] + [0, 0]
-    #
-    # stream = []
-    # for i in range(len(known_starting_state)):
-    #     stream.append(known_starting_state[i] ^ guessed_final_state[i])
-    # print(stream)
-    # for i in stream:
-    #     print(hex(i))
-    # # i = initialState(keyFound, [0, 0], nonce)
-    # # f = chacha(i)
-    # # c2 =[]
-    # # output = []
-    # # for i in range(64):
-    # #     output.append(c1[i] ^ bytearray(plaintext, "utf8")[i])
-    # # print(base64.b64encode(finalXor(c1, f)))
+
+    print()
+    print("Test to find stream from unknown")
+    c1 = base64.b64decode(c)
+    t = bytearray(plaintext, "utf8")
+    arr = []
+    for i in range(64):
+        arr.append(t[i] ^ c1[i])
+    print(streamToState(arr))
+
+
+    key_found = [3305947535, 3287107494, 3534216904, 3503964662, 2013964433,
+            80122982, 2633959450, 3042788487]
+    nonce = [435862908, 346180266]
+
+    init_state = initialState(key_found, [0,1], nonce)
+    cp = copy.deepcopy(init_state)
+    final_state = chacha(cp)
+    stream1 = []
+    for i in range(len(init_state)):
+        stream1.append(init_state[i] ^ final_state[i])
+
+    stream2 = from_little_endian(stream1)
+    ciphertext = []
+    for i in range(64):
+        if(64+ i < len(c1)):
+            ciphertext.append(stream2[i] ^ c1[64+i])
+
+    print(bytes(ciphertext))
+
+
